@@ -5,8 +5,8 @@ export type TCameraZoom ={
 }
 
 export const cameraZoom: TCameraZoom[] = [
-  {id: 1, minZoom: 0.5, maxZoom: 0.999999},
-  {id: 2, minZoom: 1, maxZoom: 1.999999},
-  {id: 3, minZoom: 2, maxZoom: 10.99999},
+  {id: 1, minZoom: 1, maxZoom: 2.9},
+  {id: 2, minZoom: 3, maxZoom: 4.9},
+  {id: 3, minZoom: 5, maxZoom: 10.9},
 ];
 

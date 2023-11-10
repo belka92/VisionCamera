@@ -1,10 +1,10 @@
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {FC} from 'react';
 import {CameraScreen, GalleryScreen, HomeScreen} from './components';
 
 const Stack = createNativeStackNavigator();
 
-const AppNavigator: FC = () => {
+const AppNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{

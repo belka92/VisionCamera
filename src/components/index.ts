@@ -1,3 +1,3 @@
-export {default as HomeScreen} from './HomeScreen';
-export {default as CameraScreen} from './CameraScreen';
-export {default as GalleryScreen} from './GalleryScreen';
+export {default as CameraScreen} from './screens/CameraScreen';
+export {default as HomeScreen} from './screens/HomeScreen/HomeScreen';
+export {default as GalleryScreen} from './screens/GalleryScreen/GalleryScreen';
