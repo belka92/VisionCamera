@@ -1,7 +1,6 @@
 import React, {ReactNode} from 'react';
 import {
   StyleProp,
-  Text,
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,

@@ -1,13 +1,12 @@
-import React, { Ref, useLayoutEffect, useState } from 'react';
-import { View } from 'react-native';
-import { useStyles } from './VisionCamera.useStyles';
-import { PinchGestureHandler } from 'react-native-gesture-handler';
-import { Camera, CameraDevice, CameraPermissionStatus } from 'react-native-vision-camera';
-import { ActivityIndicator } from 'react-native-paper';
+import React, { useLayoutEffect, useState } from 'react';
 import Reanimated from 'react-native-reanimated';
+import { ActivityIndicator } from 'react-native-paper';
 import { useIsFocused } from '@react-navigation/native';
 import { useAppState } from '@react-native-community/hooks';
+import { PinchGestureHandler } from 'react-native-gesture-handler';
+import { Camera, CameraDevice, CameraPermissionStatus } from 'react-native-vision-camera';
 
+import { useStyles } from './VisionCamera.useStyles';
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -93,10 +92,10 @@ const VisionCamera = ({zoom, cameraDevice, torch, setZoom, cameraRef }: IVisionC
 };
 
 export interface IVisionCameraProps {
-  cameraDevice: CameraDevice | null;
-  torch: 'off' | 'on' | undefined;
   zoom: number;
+  torch: 'off' | 'on' | undefined;
   setZoom: (value: number)=> void;
+  cameraDevice: CameraDevice | null;
   cameraRef: React.MutableRefObject<Camera | null>;
 
 };

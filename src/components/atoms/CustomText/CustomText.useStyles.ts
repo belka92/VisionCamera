@@ -1,12 +1,10 @@
-import { useTheme } from 'react-native-elements';
-import { StyleSheet } from 'react-native';
+import {useTheme} from 'react-native-elements';
+import {StyleSheet} from 'react-native';
 
 export function useStyles() {
-	const { theme } = useTheme();
+  const {theme} = useTheme();
 
-    const styles = StyleSheet.create({
+  const styles = StyleSheet.create({});
 
-    });
-
-	return { styles, theme };
+  return {styles, theme};
 }
