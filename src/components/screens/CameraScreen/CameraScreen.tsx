@@ -56,7 +56,7 @@ const CameraScreen = () => {
     try {
       if (cameraRef.current == null) throw new Error('Camera ref is null');
       if (!isRecording) {
-        const video = await cameraRef.current.startRecording({
+        await cameraRef.current.startRecording({
           onRecordingFinished: video => {
             setImageSource(video.path);
             storeImage({uri: video.path});
@@ -64,11 +64,9 @@ const CameraScreen = () => {
           onRecordingError: error => console.error(error),
         });
         setIsRecording(true);
-        console.warn('Recording started', video);
       } else {
-        const video = await cameraRef.current.stopRecording();
+        await cameraRef.current.stopRecording();
         setIsRecording(false);
-        console.warn('Recording stopped', video);
       }
     } catch (error) {
       console.warn(error);
