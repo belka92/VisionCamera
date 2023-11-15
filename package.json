@@ -12,9 +12,7 @@
     "add:organism-component": "hygen add organism-component",
     "add:template-component": "hygen add template-component",
     "add:screen-component": "hygen add screen-component",
-    "test": "jest",
-    "commitmsg": "commitlint -E HUSKY_GIT_PARAMS"
-
+    "test": "jest"
   },
   "dependencies": {
     "@mdi/js": "^7.3.67",
@@ -50,7 +48,6 @@
     "react-native-video": "^5.2.1",
     "react-native-vision-camera": "^2.16.4",
     "react-native-worklets-core": "^0.2.4",
-    "standard-version": "^9.5.0",
     "uuid": "^9.0.1",
     "vision-camera-code-scanner": "^0.2.0"
   },
@@ -75,14 +72,10 @@
     "metro-react-native-babel-preset": "0.76.8",
     "prettier": "^2.4.1",
     "react-test-renderer": "18.2.0",
+    "standard-version": "^9.5.0",
     "typescript": "4.8.4"
   },
   "engines": {
     "node": ">=16"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "npm run commitmsg"
-    }
   }
 }

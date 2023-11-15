@@ -1,57 +1,71 @@
-name: CI/CD for React Native
-
 on:
   push:
     branches:
       - main
-
+  pull_request:
+    types: [ assigned, opened, synchronize, reopened, labeled ]
+name: ci
 jobs:
-  build:
-    runs-on: macos-latest
-
+  test-14:
+    name: test (14)
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '14'
-
-    - name: Install dependencies
-      run: |
-        npm install
-
-    - name: Run tests
-      run: |
-        npm test
-
-  release:
-    runs-on: macos-latest
-
-    needs: build
-
+      - run: echo "Node.js 14 is outdated"
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [16, 18, 20]
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '14'
-
-    - name: Install dependencies
-      run: |
-        npm install -g commitizen standard-version
-
-    - name: Create Conventional Commit
-      run: |
-        npx git-cz
-
-    - name: Bump version and create release
-      run: |
-        npm run release
-
-    - name: Push changes
-      run: |
-        git push --follow-tags origin main
+      - uses: actions/checkout@v4
+      - run: git config --global user.name 'CI'
+      - run: git config --global user.email 'dummy@example.org'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+      - run: node --version
+      - run: pnpm install
+      - run: pnpm lint
+      - run: pnpm test
+      - name: coverage
+        uses: coverallsapp/github-action@main
+        with:
+          flag-name: actions ${{ matrix.node }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel: true
+          fail-on-error: false
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git config --global user.name 'CI'
+      - run: git config --global user.email 'dummy@example.org'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm lint
+      - run: pnpm test
+      - name: coverage
+        uses: coverallsapp/github-action@main
+        with:
+          flag-name: actions windows
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel: true
+          fail-on-error: false
+  finish:
+    needs: [test, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: coverallsapp/github-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
