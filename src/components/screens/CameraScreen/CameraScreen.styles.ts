@@ -114,7 +114,7 @@ export function useStyles() {
       fontSize: 16,
       color: '#fff',
       fontWeight: '600',
-      fontFamily: 'Thonburi-Light',
+      // fontFamily: 'Thonburi-Light',
     },
   });
 
