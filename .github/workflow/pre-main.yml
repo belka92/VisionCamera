@@ -1,0 +1,57 @@
+name: CI/CD for React Native
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: |
+        npm install
+
+    - name: Run tests
+      run: |
+        npm test
+
+  release:
+    runs-on: macos-latest
+
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: |
+        npm install -g commitizen standard-version
+
+    - name: Create Conventional Commit
+      run: |
+        npx git-cz
+
+    - name: Bump version and create release
+      run: |
+        npm run release
+
+    - name: Push changes
+      run: |
+        git push --follow-tags origin main
