@@ -12,7 +12,9 @@
     "add:organism-component": "hygen add organism-component",
     "add:template-component": "hygen add template-component",
     "add:screen-component": "hygen add screen-component",
-    "test": "jest"
+    "test": "jest",
+    "cz": "commitizen",
+    "release": "standard-version"
   },
   "dependencies": {
     "@mdi/js": "^7.3.67",
