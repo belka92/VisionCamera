@@ -1,14 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, GestureResponderEvent} from 'react-native';
 import {
   Camera,
   CameraDevice,
   useCameraDevices,
+  useFrameProcessor,
 } from 'react-native-vision-camera';
 import Video from 'react-native-video';
 import {useNavigation} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import {useScanBarcodes, BarcodeFormat, scanBarcodes, Barcode} from 'vision-camera-code-scanner';
 
 import useCameraImageStorage from '../../../hooks/useCameraImageStorage';
 
@@ -19,6 +21,8 @@ import {VisionCamera} from '../../organisms';
 import {cameraZoom} from '../../../utils/cameraZoom';
 
 import {useStyles} from './CameraScreen.styles';
+import {Text} from 'react-native-elements';
+import { runOnJS } from 'react-native-reanimated';
 
 const CameraScreen = () => {
   const {styles} = useStyles();
@@ -34,6 +38,17 @@ const CameraScreen = () => {
   const [zoom, setZoom] = useState(cameraZoom[0].minZoom);
   const [torch, setTorch] = useState<'off' | 'on' | undefined>('off');
   const [cameraDevice, setCameraDevice] = useState<CameraDevice | null>(null);
+
+  const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE], {
+    checkInverted: true,
+  });
+
+// const [barcodes, setBarcodes] = useState<Barcode[]>([]);
+//   const frameProcessor = useFrameProcessor((frame) => {
+//    'worklet';
+//        const detectedBarcodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE], { checkInverted: true });
+//      runOnJS(setBarcodes)(detectedBarcodes);
+//      }, []);
 
   const navigateToGalleryScreen = () => {
     navigation.navigate('Gallery Screen' as never);
@@ -93,9 +108,33 @@ const CameraScreen = () => {
     }
   };
 
+  const handleFocus = async (tapEvent: GestureResponderEvent) => {
+    try {
+      console.log(
+        'Tapped at:',
+        tapEvent.nativeEvent.locationX,
+        tapEvent.nativeEvent.locationY,
+      );
+      if (cameraRef.current) {
+        console.log('Camera ref:', cameraRef.current);
+        await cameraRef.current.focus({
+          x: tapEvent.nativeEvent.locationX,
+          y: tapEvent.nativeEvent.locationY,
+        });
+        console.log('Focus successful!');
+      } else {
+        console.log('Camera ref is null.');
+      }
+    } catch (error) {
+      console.warn('Error focusing:', error);
+    }
+  };
+
   return (
     <Layout backgroundColor="transparent">
-      <GestureHandlerRootView style={styles.container}>
+      <GestureHandlerRootView
+        style={styles.container}
+        onTouchEnd={event => handleFocus(event)}>
         <TouchableButton
           icon={
             <FontAwesome6
@@ -142,7 +181,15 @@ const CameraScreen = () => {
           zoom={zoom}
           setZoom={setZoom}
           cameraRef={cameraRef}
+          frameProccesor={frameProcessor}
+
         />
+        {barcodes.map((barcode, idx) => (
+          <Text key={idx} style={styles.barcodeTextURL}>
+            {barcode.displayValue}
+          </Text>
+        ))}
+
         {imageSource ? (
           <TouchableButton
             onPress={() => navigateToGalleryScreen()}
