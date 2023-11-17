@@ -4,16 +4,18 @@ import { ActivityIndicator } from 'react-native-paper';
 import { useIsFocused } from '@react-navigation/native';
 import { useAppState } from '@react-native-community/hooks';
 import { PinchGestureHandler } from 'react-native-gesture-handler';
-import { Camera, CameraDevice, CameraPermissionStatus } from 'react-native-vision-camera';
+import { Camera, CameraDevice, CameraPermissionStatus, Frame } from 'react-native-vision-camera';
 
 import { useStyles } from './VisionCamera.useStyles';
+import { Surface } from 'gl-react';
+import { Saturate } from '../../molecules';
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
 });
 
-const VisionCamera = ({zoom, cameraDevice, torch, setZoom, cameraRef }: IVisionCameraProps) => {
+const VisionCamera = ({zoom, cameraDevice, torch, setZoom, cameraRef, frameProccesor }: IVisionCameraProps) => {
   const { styles, theme } = useStyles();
   const [cameraPermission, setCameraPermission] =
   useState<CameraPermissionStatus | null>(null);
@@ -75,7 +77,9 @@ const VisionCamera = ({zoom, cameraDevice, torch, setZoom, cameraRef }: IVisionC
             audio
             enableDepthData
             enableHighQualityPhotos
+            frameProcessor={frameProccesor}
           />
+       
         </PinchGestureHandler>
       );
     }
@@ -93,6 +97,7 @@ const VisionCamera = ({zoom, cameraDevice, torch, setZoom, cameraRef }: IVisionC
 
 export interface IVisionCameraProps {
   zoom: number;
+  frameProccesor: (frame: Frame) => void;
   torch: 'off' | 'on' | undefined;
   setZoom: (value: number)=> void;
   cameraDevice: CameraDevice | null;
